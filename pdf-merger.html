@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free PDF Merger Online — Combine PDF Files Privately — LOGISOPH Tools</title>
+  <meta name="description" content="Merge multiple PDF files into one document directly in your browser. Zero server uploads—your private documents stay on your device." />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com"></script>
+  <style>
+    .drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 36px 20px; text-align: center; cursor: pointer; background: var(--bg); }
+    .drop-zone:hover { border-color: var(--accent); }
+    .file-list { list-style: none; margin: 20px 0; }
+    .file-item { display: flex; justify-content: space-between; align-items: center; background: var(--bg); border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; margin-bottom: 8px; font-size: 0.92rem; }
+    .file-actions { display: flex; gap: 6px; }
+    .mini-btn { background: #e2e8f0; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.82rem; }
+    .mini-btn:hover { background: #cbd5e1; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container tool-page">
+    <div class="tool-header">
+      <span class="tool-tag">PDF Tool</span>
+      <h1>PDF Merger</h1>
+      <p style="color:var(--text-muted);">Combine two or more PDF documents into a single PDF locally in your browser.</p>
+    </div>
+
+    <div class="tool-box">
+      <div class="drop-zone" id="dropZone">
+        <p style="font-weight:600; margin-bottom:6px;">Click to add PDF files</p>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Select multiple PDFs at once or add more files in order</p>
+        <input type="file" id="fileInput" accept="application/pdf" multiple style="display:none;" />
+      </div>
+
+      <ul class="file-list" id="fileList"></ul>
+
+      <div id="actionArea" style="display:none;">
+        <button class="btn" id="mergeBtn">Merge & Download PDF</button>
+        <button class="btn btn-secondary" id="clearBtn" style="margin-left:8px;">Clear All</button>
+        <p id="statusMsg" style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);"></p>
+      </div>
+    </div>
+
+    <div class="instructions-box">
+      <h2>How to Merge PDF Files</h2>
+      <ol>
+        <li>Click the upload area and select two or more PDF files from your device.</li>
+        <li>Use the <strong>Up</strong> and <strong>Down</strong> buttons to arrange the documents in the exact order you want.</li>
+        <li>Click <strong>Merge & Download PDF</strong> to combine them locally and save the finished document.</li>
+      </ol>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></div>
+          <p>Free Tools. Simple Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    const actionArea = document.getElementById('actionArea');
+    const mergeBtn = document.getElementById('mergeBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const statusMsg = document.getElementById('statusMsg');
+
+    let pdfFiles = [];
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+      const selected = Array.from(e.target.files).filter(f => f.type === 'application/pdf');
+      pdfFiles = pdfFiles.concat(selected);
+      fileInput.value = '';
+      renderList();
+    });
+
+    function renderList() {
+      fileList.innerHTML = '';
+      actionArea.style.display = pdfFiles.length > 0 ? 'block' : 'none';
+
+      pdfFiles.forEach((file, idx) => {
+        const li = document.createElement('li');
+        li.className = 'file-item';
+        li.innerHTML = `
+          <span><strong>${idx + 1}.</strong> ${file.name}</span>
+          <div class="file-actions">
+            <button class="mini-btn" onclick="moveFile(${idx}, -1)">Up</button>
+            <button class="mini-btn" onclick="moveFile(${idx}, 1)">Down</button>
+            <button class="mini-btn" onclick="removeFile(${idx})">Remove</button>
+          </div>
+        `;
+        fileList.appendChild(li);
+      });
+    }
+
+    window.moveFile = (index, dir) => {
+      const target = index + dir;
+      if (target < 0 || target >= pdfFiles.length) return;
+      [pdfFiles[index], pdfFiles[target]] = [pdfFiles[target], pdfFiles[index]];
+      renderList();
+    };
+
+    window.removeFile = (index) => {
+      pdfFiles.splice(index, 1);
+      renderList();
+    };
+
+    clearBtn.addEventListener('click', () => {
+      pdfFiles = [];
+      statusMsg.textContent = '';
+      renderList();
+    });
+
+    mergeBtn.addEventListener('click', async () => {
+      if (pdfFiles.length < 2) return alert('Please add at least 2 PDF files to merge.');
+      statusMsg.textContent = 'Merging PDFs locally...';
+
+      try {
+        const mergedPdf = await PDFLib.PDFDocument.create();
+        for (const file of pdfFiles) {
+          const bytes = await file.arrayBuffer();
+          const pdf = await PDFLib.PDFDocument.load(bytes);
+          const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+          copiedPages.forEach(page => mergedPdf.addPage(page));
+        }
+
+        const mergedBytes = await mergedPdf.save();
+        const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'logisoph-merged.pdf';
+        a.click();
+        statusMsg.textContent = '✓ Merged PDF downloaded!';
+      } catch (err) {
+        statusMsg.textContent = 'Error: One of the PDFs may be password-protected or corrupted.';
+      }
+    });
+  </script>
+</body>
+</html>

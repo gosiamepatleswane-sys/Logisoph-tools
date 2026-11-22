@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>South African VAT Calculator (15% ZAR) — LOGISOPH Tools</title>
+  <meta name="description" content="Calculate South African VAT at 15% in Rands (ZAR). Add VAT to exclusive prices or extract VAT from VAT-inclusive amounts instantly." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .vat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-bottom: 24px; }
+    .vat-field label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+    .vat-field input, .vat-field select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; }
+    .breakdown { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+    .breakdown-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 1rem; }
+    .breakdown-row:last-child { border-bottom: none; font-weight: 800; font-size: 1.15rem; color: var(--primary); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container tool-page">
+    <div class="tool-header">
+      <span class="tool-tag">Calculator</span>
+      <h1>South African VAT Calculator</h1>
+      <p style="color:var(--text-muted);">Add or remove South Africa's standard 15% Value-Added Tax in Rands (ZAR).</p>
+    </div>
+
+    <div class="tool-box">
+      <div class="vat-grid">
+        <div class="vat-field">
+          <label for="amountInput">Amount (ZAR)</label>
+          <input type="number" id="amountInput" placeholder="e.g. 1000" step="any" min="0" />
+        </div>
+        <div class="vat-field">
+          <label for="modeSelect">Calculation Mode</label>
+          <select id="modeSelect">
+            <option value="add">Add 15% VAT (Amount is VAT Exclusive)</option>
+            <option value="extract">Extract 15% VAT (Amount is VAT Inclusive)</option>
+          </select>
+        </div>
+        <div class="vat-field">
+          <label for="rateInput">VAT Rate (%)</label>
+          <input type="number" id="rateInput" value="15" step="any" min="0" />
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-row">
+          <span>Amount Excluding VAT:</span>
+          <span id="exclOut">R 0.00</span>
+        </div>
+        <div class="breakdown-row">
+          <span>VAT Amount (<span id="rateLabel">15</span>%):</span>
+          <span id="vatOut" style="color:var(--accent); font-weight:600;">R 0.00</span>
+        </div>
+        <div class="breakdown-row">
+          <span>Total Amount Including VAT:</span>
+          <span id="inclOut">R 0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="instructions-box">
+      <h2>How to Use the South African VAT Calculator</h2>
+      <ol>
+        <li>Enter your Rand (ZAR) figure in the <strong>Amount</strong> field.</li>
+        <li>Select <strong>Add 15% VAT</strong> if your price excludes VAT, or <strong>Extract 15% VAT</strong> if your total already includes VAT.</li>
+        <li>Copy the exact VAT-exclusive amount, VAT portion, and VAT-inclusive invoice total from the breakdown box.</li>
+      </ol>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></div>
+          <p>Free Tools. Simple Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    const amountInput = document.getElementById('amountInput');
+    const modeSelect = document.getElementById('modeSelect');
+    const rateInput = document.getElementById('rateInput');
+    const rateLabel = document.getElementById('rateLabel');
+    const exclOut = document.getElementById('exclOut');
+    const vatOut = document.getElementById('vatOut');
+    const inclOut = document.getElementById('inclOut');
+
+    function formatZAR(num) {
+      return 'R ' + num.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function calculateVAT() {
+      const amount = parseFloat(amountInput.value) || 0;
+      const rate = parseFloat(rateInput.value) || 0;
+      rateLabel.textContent = rate;
+
+      let excl = 0, vat = 0, incl = 0;
+
+      if (modeSelect.value === 'add') {
+        excl = amount;
+        vat = amount * (rate / 100);
+        incl = excl + vat;
+      } else {
+        incl = amount;
+        excl = amount / (1 + rate / 100);
+        vat = incl - excl;
+      }
+
+      exclOut.textContent = formatZAR(excl);
+      vatOut.textContent = formatZAR(vat);
+      inclOut.textContent = formatZAR(incl);
+    }
+
+    amountInput.addEventListener('input', calculateVAT);
+    modeSelect.addEventListener('change', calculateVAT);
+    rateInput.addEventListener('input', calculateVAT);
+  </script>
+</body>
+</html>

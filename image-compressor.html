@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Image Compressor Online — LOGISOPH Tools</title>
+  <meta name="description" content="Compress JPG, PNG, and WebP images directly in your browser. Reduce file size privately without uploading photos to any server." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 36px 20px; text-align: center; cursor: pointer; background: var(--bg); transition: border-color 0.2s; }
+    .drop-zone:hover { border-color: var(--accent); }
+    .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 20px 0; }
+    .control-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+    .control-group input, .control-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
+    .stats-bar { display: flex; flex-wrap: wrap; gap: 16px; background: #eff6ff; padding: 14px 18px; border-radius: 8px; margin: 16px 0; font-size: 0.92rem; }
+    .preview-img { max-width: 100%; max-height: 280px; border-radius: 8px; margin-top: 12px; border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container tool-page">
+    <div class="tool-header">
+      <span class="tool-tag">Image Tool</span>
+      <h1>Image Compressor</h1>
+      <p style="color:var(--text-muted);">Shrink image file sizes locally in your browser while preserving visual clarity.</p>
+    </div>
+
+    <div class="tool-box">
+      <div class="drop-zone" id="dropZone">
+        <p style="font-weight:600; margin-bottom:6px;">Click to choose an image or drag & drop here</p>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Supports JPG, PNG, and WebP</p>
+        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" style="display:none;" />
+      </div>
+
+      <div id="editorArea" style="display:none;">
+        <div class="controls">
+          <div class="control-group">
+            <label for="qualityRange">Compression Quality: <span id="qualityVal">80%</span></label>
+            <input type="range" id="qualityRange" min="10" max="95" value="80" />
+          </div>
+          <div class="control-group">
+            <label for="formatSelect">Output Format</label>
+            <select id="formatSelect">
+              <option value="image/jpeg">JPG (Best for photos & smallest size)</option>
+              <option value="image/webp">WebP (Modern web format)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="stats-bar">
+          <div><strong>Original Size:</strong> <span id="origSize">-</span></div>
+          <div><strong>Compressed Size:</strong> <span id="newSize">-</span></div>
+          <div><strong>Saved:</strong> <span id="savedPct" style="color:#16a34a; font-weight:700;">-</span></div>
+        </div>
+
+        <button class="btn" id="downloadBtn">Download Compressed Image</button>
+        <div style="margin-top:16px;">
+          <img id="previewImg" class="preview-img" alt="Compressed preview" />
+        </div>
+      </div>
+    </div>
+
+    <div class="instructions-box">
+      <h2>How to Use the Image Compressor</h2>
+      <ol>
+        <li>Click the upload area above and choose a JPG, PNG, or WebP image from your device.</li>
+        <li>Adjust the <strong>Compression Quality</strong> slider (75%–85% usually gives the best balance between small size and sharp detail).</li>
+        <li>Check the <strong>Compressed Size</strong> and savings percentage, then click <strong>Download Compressed Image</strong>.</li>
+      </ol>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></div>
+          <p>Free Tools. Simple Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const editorArea = document.getElementById('editorArea');
+    const qualityRange = document.getElementById('qualityRange');
+    const qualityVal = document.getElementById('qualityVal');
+    const formatSelect = document.getElementById('formatSelect');
+    const origSizeEl = document.getElementById('origSize');
+    const newSizeEl = document.getElementById('newSize');
+    const savedPctEl = document.getElementById('savedPct');
+    const previewImg = document.getElementById('previewImg');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let loadedImg = null;
+    let originalBytes = 0;
+    let fileName = 'compressed';
+    let compressedBlob = null;
+
+    function formatBytes(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / 1048576).toFixed(2) + ' MB';
+    }
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = '#2563eb'; });
+    dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = '#e2e8f0'; });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = '#e2e8f0';
+      if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files[0]) handleFile(e.target.files[0]);
+    });
+
+    function handleFile(file) {
+      if (!file.type.startsWith('image/')) return alert('Please select a valid image file.');
+      originalBytes = file.size;
+      fileName = file.name.replace(/\.[^/.]+$/, '');
+      origSizeEl.textContent = formatBytes(originalBytes);
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          loadedImg = img;
+          editorArea.style.display = 'block';
+          compressImage();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function compressImage() {
+      if (!loadedImg) return;
+      const quality = parseInt(qualityRange.value, 10) / 100;
+      qualityVal.textContent = qualityRange.value + '%';
+      const mime = formatSelect.value;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = loadedImg.width;
+      canvas.height = loadedImg.height;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(loadedImg, 0, 0);
+
+      canvas.toBlob((blob) => {
+        compressedBlob = blob;
+        newSizeEl.textContent = formatBytes(blob.size);
+        const pct = (((originalBytes - blob.size) / originalBytes) * 100).toFixed(1);
+        savedPctEl.textContent = pct > 0 ? pct + '% smaller' : '0% (try lower quality)';
+        previewImg.src = URL.createObjectURL(blob);
+      }, mime, quality);
+    }
+
+    qualityRange.addEventListener('input', compressImage);
+    formatSelect.addEventListener('change', compressImage);
+
+    downloadBtn.addEventListener('click', () => {
+      if (!compressedBlob) return;
+      const ext = formatSelect.value === 'image/webp' ? 'webp' : 'jpg';
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(compressedBlob);
+      a.download = `${fileName}-compressed.${ext}`;
+      a.click();
+    });
+  </script>
+</body>
+</html>

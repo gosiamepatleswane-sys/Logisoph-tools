@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Image Resizer Online — LOGISOPH Tools</title>
+  <meta name="description" content="Resize images by width and height in pixels directly in your browser. Lock aspect ratio and download immediately." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 36px 20px; text-align: center; cursor: pointer; background: var(--bg); }
+    .drop-zone:hover { border-color: var(--accent); }
+    .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 20px 0; align-items: end; }
+    .control-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+    .control-group input[type="number"] { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
+    .preview-img { max-width: 100%; max-height: 280px; border-radius: 8px; margin-top: 16px; border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container tool-page">
+    <div class="tool-header">
+      <span class="tool-tag">Image Tool</span>
+      <h1>Image Resizer</h1>
+      <p style="color:var(--text-muted);">Resize any photo to exact pixel dimensions privately on your device.</p>
+    </div>
+
+    <div class="tool-box">
+      <div class="drop-zone" id="dropZone">
+        <p style="font-weight:600; margin-bottom:6px;">Click to select an image to resize</p>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Supports JPG, PNG, and WebP</p>
+        <input type="file" id="fileInput" accept="image/*" style="display:none;" />
+      </div>
+
+      <div id="editorArea" style="display:none;">
+        <p style="margin-top:16px; font-size:0.9rem; color:var(--text-muted);">Original Dimensions: <strong id="origDims">-</strong></p>
+
+        <div class="controls">
+          <div class="control-group">
+            <label for="widthInput">Width (px)</label>
+            <input type="number" id="widthInput" min="1" max="10000" />
+          </div>
+          <div class="control-group">
+            <label for="heightInput">Height (px)</label>
+            <input type="number" id="heightInput" min="1" max="10000" />
+          </div>
+          <div class="control-group" style="padding-bottom:10px;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:500;">
+              <input type="checkbox" id="lockRatio" checked /> Lock Aspect Ratio
+            </label>
+          </div>
+        </div>
+
+        <button class="btn" id="downloadBtn">Resize & Download Image</button>
+        <div>
+          <img id="previewImg" class="preview-img" alt="Image preview" />
+        </div>
+      </div>
+    </div>
+
+    <div class="instructions-box">
+      <h2>How to Use the Image Resizer</h2>
+      <ol>
+        <li>Select an image from your computer or phone.</li>
+        <li>Enter your target <strong>Width</strong> or <strong>Height</strong> in pixels (with <strong>Lock Aspect Ratio</strong> checked, the other side updates automatically so your photo never looks stretched).</li>
+        <li>Click <strong>Resize & Download Image</strong> to save the resized file.</li>
+      </ol>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></div>
+          <p>Free Tools. Simple Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const editorArea = document.getElementById('editorArea');
+    const origDims = document.getElementById('origDims');
+    const widthInput = document.getElementById('widthInput');
+    const heightInput = document.getElementById('heightInput');
+    const lockRatio = document.getElementById('lockRatio');
+    const previewImg = document.getElementById('previewImg');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let loadedImg = null;
+    let aspectRatio = 1;
+    let fileName = 'resized';
+    let fileType = 'image/png';
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file || !file.type.startsWith('image/')) return;
+      fileName = file.name.replace(/\.[^/.]+$/, '');
+      fileType = file.type === 'image/jpeg' ? 'image/jpeg' : 'image/png';
+
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          loadedImg = img;
+          aspectRatio = img.width / img.height;
+          origDims.textContent = `${img.width} × ${img.height} px`;
+          widthInput.value = img.width;
+          heightInput.value = img.height;
+          previewImg.src = ev.target.result;
+          editorArea.style.display = 'block';
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    widthInput.addEventListener('input', () => {
+      if (lockRatio.checked && widthInput.value > 0) {
+        heightInput.value = Math.round(widthInput.value / aspectRatio);
+      }
+    });
+
+    heightInput.addEventListener('input', () => {
+      if (lockRatio.checked && heightInput.value > 0) {
+        widthInput.value = Math.round(heightInput.value * aspectRatio);
+      }
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      if (!loadedImg) return;
+      const w = parseInt(widthInput.value, 10);
+      const h = parseInt(heightInput.value, 10);
+      if (!w || !h || w < 1 || h < 1) return alert('Enter valid width and height values.');
+
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(loadedImg, 0, 0, w, h);
+
+      canvas.toBlob((blob) => {
+        const ext = fileType === 'image/jpeg' ? 'jpg' : 'png';
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `${fileName}-${w}x${h}.${ext}`;
+        a.click();
+      }, fileType, 0.92);
+    });
+  </script>
+</body>
+</html>

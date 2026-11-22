@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LOGISOPH Tools — Free Online PDF, Image, Text & Calculator Tools</title>
+  <meta name="description" content="Free Tools. Simple Solutions. Compress images, resize photos, convert JPG to PNG, merge or split PDFs, count words, and calculate South African VAT directly in your browser." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo">
+        <div class="logo-badge">L</div>
+        LOGISOPH <span>Tools</span>
+      </a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html" class="active">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Free Tools. Simple Solutions.</h1>
+      <p>Fast, browser-based utilities for South Africa and the world. Your files stay private on your device—never uploaded to external servers.</p>
+      <div class="search-box">
+        <input type="text" id="toolSearch" placeholder="Search tools (e.g., VAT, PDF, compress, word count)..." aria-label="Search tools" />
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+    <div class="categories" id="categoryFilters">
+      <button class="cat-btn active" data-category="all">All Tools (8)</button>
+      <button class="cat-btn" data-category="image">Image Tools</button>
+      <button class="cat-btn" data-category="pdf">PDF Tools</button>
+      <button class="cat-btn" data-category="text">Text Tools</button>
+      <button class="cat-btn" data-category="calculator">Calculators</button>
+    </div>
+
+    <div class="tools-grid" id="toolsGrid">
+      <a href="image-compressor.html" class="tool-card" data-category="image" data-keywords="image compressor shrink photo size jpg png webp">
+        <div>
+          <span class="tool-tag">Image</span>
+          <h3>Image Compressor</h3>
+          <p>Reduce image file size without losing noticeable quality for faster uploads and emails.</p>
+        </div>
+        <span class="tool-link">Open Tool →</span>
+      </a>
+
+      <a href="image-resizer.html" class="tool-card" data-category="image" data-keywords="image resizer dimensions width height pixels scale">
+        <div>
+          <span class="tool-tag">Image</span>
+          <h3>Image Resizer</h3>
+          <p>Change image width and height in pixels while keeping your aspect ratio intact.</p>
+        </div>
+        <span class="tool-link">Open Tool →</span>
+      </a>
+
+      <a href="jpg-to-png.html" class="tool-card" data-category="image" data-keywords="jpg to png converter format jpeg image">
+        <div>
+          <span class="tool-tag">Image</span>
+          <h3>JPG to PNG Converter</h3>
+          <p>Convert JPG/JPEG photos into lossless PNG images instantly in your browser.</p>
+        </div>
+        <span class="tool-link">Open Tool →</span>
+      </a>
+
+      <a href="word-counter.html" class="tool-card" data-category="text" data-keywords="word counter character count sentences reading time text">
+        <div>
+          <span class="tool-tag">Text</span>
+          <h3>Word Counter</h3>
+          <p>Count words, characters, sentences, and estimated reading time in real time.</p>
+        </div>
+        <span class="tool-link">Open Tool →</span>
+      </a>
+
+      <a href="percentage-calculator.html" class="tool-card" data-category="calculator" data-keywords="percentage calculator percent increase decrease discount">
+        <div>
+          <span class="tool-tag">Calculator</span>
+          <h3>Percentage Calculator</h3>
+          <p>Quickly calculate percentages, percentage changes, and proportions.</p>
+        </div>
+        <span class="tool-link">Open Tool →</span>
+      </a>
+
+      <a href="sa-vat-calculator.html" class="tool-card" data-category="calculator" data-keywords="south african vat calculator 15% rand zar tax inclusive exclusive">
+        <div>
+          <span class="tool-tag">Calculator</span>
+          <h3>South African VAT Calculator</h3>
+          <p>Add or extract South Africa's 15% VAT in Rands (ZAR) with instant invoice totals.</p>
+        </div>
+        <span class="tool-link">Open Tool →</span>
+      </a>
+
+      <a href="pdf-merger.html" class="tool-card" data-category="pdf" data-keywords="pdf merger combine join documents files">
+        <div>
+          <span class="tool-tag">PDF</span>
+          <h3>PDF Merger</h3>
+          <p>Combine multiple PDF documents into a single organized file locally on your device.</p>
+        </div>
+        <span class="tool-link">Open Tool →</span>
+      </a>
+
+      <a href="pdf-splitter.html" class="tool-card" data-category="pdf" data-keywords="pdf splitter extract pages separate document">
+        <div>
+          <span class="tool-tag">PDF</span>
+          <h3>PDF Splitter</h3>
+          <p>Extract specific pages or page ranges from any PDF document in seconds.</p>
+        </div>
+        <span class="tool-link">Open Tool →</span>
+      </a>
+    </div>
+
+    <div id="noResults" style="display:none; text-align:center; padding: 40px 0; color: var(--text-muted);">
+      No tools matched your search. Try another keyword.
+    </div>
+
+    <section class="privacy-strip">
+      <h2>100% Browser-Based Privacy</h2>
+      <p>All files are processed locally inside your web browser. Nothing is uploaded, stored, or viewed on any server.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;">
+            <div class="logo-badge">L</div>
+            LOGISOPH <span>Tools</span>
+          </div>
+          <p>Free Tools. Simple Solutions. Built for fast, private everyday productivity in South Africa and worldwide.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

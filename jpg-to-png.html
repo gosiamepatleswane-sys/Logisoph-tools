@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free JPG to PNG Converter Online — LOGISOPH Tools</title>
+  <meta name="description" content="Convert JPG and JPEG images to high-quality PNG format instantly in your browser. Free, fast, and 100% private." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 36px 20px; text-align: center; cursor: pointer; background: var(--bg); }
+    .drop-zone:hover { border-color: var(--accent); }
+    .preview-img { max-width: 100%; max-height: 280px; border-radius: 8px; margin-top: 16px; border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container tool-page">
+    <div class="tool-header">
+      <span class="tool-tag">Image Tool</span>
+      <h1>JPG to PNG Converter</h1>
+      <p style="color:var(--text-muted);">Convert JPG/JPEG photos into lossless PNG files directly in your browser.</p>
+    </div>
+
+    <div class="tool-box">
+      <div class="drop-zone" id="dropZone">
+        <p style="font-weight:600; margin-bottom:6px;">Click to select a JPG / JPEG file</p>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Instant local conversion with zero server uploads</p>
+        <input type="file" id="fileInput" accept="image/jpeg,image/jpg,image/webp" style="display:none;" />
+      </div>
+
+      <div id="resultArea" style="display:none; margin-top:20px;">
+        <p style="margin-bottom:14px; color:#16a34a; font-weight:600;">✓ Ready! Converted <span id="fileLabel"></span> to PNG.</p>
+        <button class="btn" id="downloadBtn">Download PNG Image</button>
+        <div>
+          <img id="previewImg" class="preview-img" alt="Converted PNG preview" />
+        </div>
+      </div>
+    </div>
+
+    <div class="instructions-box">
+      <h2>How to Convert JPG to PNG</h2>
+      <ol>
+        <li>Click the upload box above and choose your JPG or JPEG file.</li>
+        <li>Your browser automatically renders a lossless PNG version on your device.</li>
+        <li>Click <strong>Download PNG Image</strong> to save the converted file.</li>
+      </ol>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></div>
+          <p>Free Tools. Simple Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const resultArea = document.getElementById('resultArea');
+    const fileLabel = document.getElementById('fileLabel');
+    const previewImg = document.getElementById('previewImg');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let pngBlob = null;
+    let baseName = 'converted';
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file || !file.type.startsWith('image/')) return alert('Please choose a valid image file.');
+      baseName = file.name.replace(/\.[^/.]+$/, '');
+      fileLabel.textContent = file.name;
+
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          canvas.getContext('2d').drawImage(img, 0, 0);
+          canvas.toBlob((blob) => {
+            pngBlob = blob;
+            previewImg.src = URL.createObjectURL(blob);
+            resultArea.style.display = 'block';
+          }, 'image/png');
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      if (!pngBlob) return;
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(pngBlob);
+      a.download = `${baseName}.png`;
+      a.click();
+    });
+  </script>
+</body>
+</html>

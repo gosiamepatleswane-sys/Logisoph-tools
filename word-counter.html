@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Word Counter & Character Counter Online — LOGISOPH Tools</title>
+  <meta name="description" content="Count words, characters, sentences, paragraphs, and estimated reading time in real time. Free online text counter." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+    .stat-num { font-size: 1.75rem; font-weight: 800; color: var(--accent); display: block; }
+    .stat-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    textarea { width: 100%; min-height: 240px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; font-family: inherit; line-height: 1.6; resize: vertical; outline: none; }
+    textarea:focus { border-color: var(--accent); }
+    .action-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container tool-page">
+    <div class="tool-header">
+      <span class="tool-tag">Text Tool</span>
+      <h1>Word Counter</h1>
+      <p style="color:var(--text-muted);">Measure word count, character length, sentences, and reading time instantly.</p>
+    </div>
+
+    <div class="tool-box">
+      <div class="stats-grid">
+        <div class="stat-card"><span class="stat-num" id="wordCount">0</span><span class="stat-label">Words</span></div>
+        <div class="stat-card"><span class="stat-num" id="charCount">0</span><span class="stat-label">Characters</span></div>
+        <div class="stat-card"><span class="stat-num" id="charNoSpace">0</span><span class="stat-label">No Spaces</span></div>
+        <div class="stat-card"><span class="stat-num" id="sentenceCount">0</span><span class="stat-label">Sentences</span></div>
+        <div class="stat-card"><span class="stat-num" id="readTime">0s</span><span class="stat-label">Read Time</span></div>
+      </div>
+
+      <textarea id="textInput" placeholder="Type or paste your text here..."></textarea>
+
+      <div class="action-row">
+        <button class="btn" id="copyBtn">Copy Text</button>
+        <button class="btn btn-secondary" id="clearBtn">Clear</button>
+      </div>
+    </div>
+
+    <div class="instructions-box">
+      <h2>How to Use the Word Counter</h2>
+      <ol>
+        <li>Type directly into the text area or paste an essay, article, CV, or social media post.</li>
+        <li>Your word count, character count (with and without spaces), sentence count, and estimated reading time update automatically.</li>
+        <li>Use <strong>Copy Text</strong> to copy your text or <strong>Clear</strong> to start fresh.</li>
+      </ol>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></div>
+          <p>Free Tools. Simple Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    const textInput = document.getElementById('textInput');
+    const wordCount = document.getElementById('wordCount');
+    const charCount = document.getElementById('charCount');
+    const charNoSpace = document.getElementById('charNoSpace');
+    const sentenceCount = document.getElementById('sentenceCount');
+    const readTime = document.getElementById('readTime');
+    const copyBtn = document.getElementById('copyBtn');
+    const clearBtn = document.getElementById('clearBtn');
+
+    function updateCounts() {
+      const text = textInput.value;
+      const trimmed = text.trim();
+      const words = trimmed ? trimmed.split(/\s+/).length : 0;
+      const chars = text.length;
+      const noSpaces = text.replace(/\s+/g, '').length;
+      const sentences = trimmed ? trimmed.split(/[.!?]+/).filter(s => s.trim().length > 0).length : 0;
+      const seconds = Math.ceil((words / 200) * 60);
+
+      wordCount.textContent = words.toLocaleString();
+      charCount.textContent = chars.toLocaleString();
+      charNoSpace.textContent = noSpaces.toLocaleString();
+      sentenceCount.textContent = sentences.toLocaleString();
+      readTime.textContent = seconds < 60 ? `${seconds}s` : `${Math.ceil(seconds / 60)}m`;
+    }
+
+    textInput.addEventListener('input', updateCounts);
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(textInput.value);
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => copyBtn.textContent = 'Copy Text', 1500);
+    });
+    clearBtn.addEventListener('click', () => {
+      textInput.value = '';
+      updateCounts();
+    });
+  </script>
+</body>
+</html>
