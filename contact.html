@@ -6,6 +6,7 @@
   <title>Contact Us — LOGISOPH Tools</title>
   <meta name="description" content="Get in touch with LOGISOPH Tools to report an issue, suggest a new tool, or ask a question." />
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <style>
     .form-group { margin-bottom: 16px; }
     .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
@@ -52,8 +53,8 @@
         </div>
         <button type="submit" class="btn">Prepare Email Message</button>
       </form>
-      <p id="contactNote" style="margin-top:14px; font-size:0.9rem; color:var(--text-muted);">
-        Note: Replace <strong>contact@logisoph.com</strong> inside <code>contact.html</code> with your preferred email address before publishing.
+      <p style="margin-top:16px; font-size:0.9rem; color:var(--text-muted);">
+        Or email us directly at: <a href="mailto:logisophtools@gmail.com" style="color:var(--accent); font-weight:600;">logisophtools@gmail.com</a>
       </p>
     </div>
   </main>
@@ -84,7 +85,7 @@
       const name = encodeURIComponent(document.getElementById('senderName').value);
       const subject = encodeURIComponent('[LOGISOPH Tools] ' + document.getElementById('subject').value);
       const body = encodeURIComponent('Name: ' + decodeURIComponent(name) + '\n\n' + document.getElementById('message').value);
-      window.location.href = `mailto:contact@://logisoph.com{subject}&body=${body}`;
+      window.location.href = `mailto:logisophtools@://gmail.com{subject}&body=${body}`;
     });
   </script>
 </body>
