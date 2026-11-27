@@ -163,9 +163,8 @@
   </footer>
 
   <script src="main.js"></script>
-  <script>
+   <script>
     let currentMode = 'cover';
-
     const btnCover = document.getElementById('btnCoverMode');
     const btnResign = document.getElementById('btnResignMode');
     const coverFields = document.getElementById('coverFields');
@@ -175,7 +174,6 @@
     function todayFormatted() {
       return new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
     }
-
     function generateLetter() {
       if (currentMode === 'cover') {
         const name = document.getElementById('clName').value.trim() || '[Your Full Name]';
@@ -187,3 +185,61 @@
 
         const intro = exp === 'graduate'
           ? `I am writing to express my strong interest in the ${role} position at ${company}. As a motivated and detail-oriented graduate, I am eager to bring my academic foundation, strong work ethic, and enthusiasm to your team.`
+          : `I am writing to apply for the ${role} position at ${company}. With proven hands-on experience and a strong commitment to delivering high-quality results, I am confident in my ability to add immediate value to your organization.`;
+
+        output.value = `${name}\n${contact}\n${todayFormatted()}\n\nHiring Manager\n${company}\n\nSubject: Application for ${role}\n\nDear Hiring Manager,\n\n${intro}\n\nThroughout my background, I have developed strong capabilities in ${skills}. I take pride in meeting deadlines, collaborating effectively with colleagues, and adapting quickly to new systems and responsibilities.\n\nI have attached my CV for your review and would welcome the opportunity to discuss how my skills align with ${company}'s goals. Thank you for your time and consideration.\n\nYours sincerely,\n\n${name}`;
+      } else {
+        const name = document.getElementById('rlName').value.trim() || '[Your Full Name]';
+        const manager = document.getElementById('rlManager').value.trim() || 'Manager';
+        const company = document.getElementById('rlCompany').value.trim() || '[Company Name]';
+        const role = document.getElementById('rlRole').value.trim() || '[Your Job Title]';
+        const notice = document.getElementById('rlNotice').value;
+        const rawDate = document.getElementById('rlLastDay').value;
+        const lastDay = rawDate
+          ? new Date(rawDate + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+          : '[Last Working Date]';
+
+        output.value = `${name}\n${todayFormatted()}\n\n${manager}\n${company}\n\nSubject: Resignation – ${role}\n\nDear ${manager},\n\nPlease accept this letter as formal notification that I am resigning from my position as ${role} at ${company}. In accordance with my ${notice}, my final working day will be ${lastDay}.\n\nI would like to thank you and the entire team for the opportunities, support, and experience I have gained during my time with the company. Over my remaining notice period, I will do everything I can to complete my current tasks and ensure a smooth handover.\n\nI wish ${company} continued success in the future.\n\nYours sincerely,\n\n${name}`;
+      }
+    }
+    btnCover.addEventListener('click', () => {
+      currentMode = 'cover';
+      btnCover.classList.add('active');
+      btnResign.classList.remove('active');
+      coverFields.style.display = 'block';
+      resignFields.style.display = 'none';
+      generateLetter();
+    });
+    btnResign.addEventListener('click', () => {
+      currentMode = 'resign';
+      btnResign.classList.add('active');
+      btnCover.classList.remove('active');
+      resignFields.style.display = 'block';
+      coverFields.style.display = 'none';
+      generateLetter();
+    });
+    document.getElementById('generateLetterBtn').addEventListener('click', generateLetter);
+    document.querySelectorAll('#coverFields input, #coverFields select, #resignFields input, #resignFields select').forEach(el => {
+      el.addEventListener('input', generateLetter);
+      el.addEventListener('change', generateLetter);
+    });
+    document.getElementById('copyLetterBtn').addEventListener('click', () => {
+      output.select();
+      navigator.clipboard.writeText(output.value);
+      const status = document.getElementById('copyStatus');
+      status.textContent = 'Copied to clipboard!';
+      setTimeout(() => { status.textContent = ''; }, 2500);
+    });
+    document.getElementById('downloadTxtBtn').addEventListener('click', () => {
+      const blob = new Blob([output.value], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = currentMode === 'cover' ? 'cover-letter.txt' : 'resignation-letter.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+    generateLetter();
+  </script>
+</body>
+</html>
