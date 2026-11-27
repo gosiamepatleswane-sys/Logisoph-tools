@@ -148,11 +148,10 @@
   </footer>
 
   <script src="main.js"></script>
-  <script>
+    <script>
     function formatZAR(amount) {
       return 'R ' + amount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
-
     function calculateCarFinance() {
       const price = Math.max(0, parseFloat(document.getElementById('carPrice').value) || 0);
       const deposit = Math.max(0, parseFloat(document.getElementById('carDeposit').value) || 0);
@@ -187,5 +186,12 @@
       document.getElementById('carInterest').textContent = formatZAR(totalInterest);
       document.getElementById('carTotal').textContent = formatZAR(totalCost);
     }
-
     document.getElementById('calcCarBtn').addEventListener('click', calculateCarFinance);
+    ['carPrice', 'carDeposit', 'carRate', 'carMonths', 'balloonPercent'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calculateCarFinance);
+      document.getElementById(id).addEventListener('change', calculateCarFinance);
+    });
+    calculateCarFinance();
+  </script>
+</body>
+</html>
