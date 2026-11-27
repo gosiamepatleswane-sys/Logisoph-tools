@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://sitemaps.org">
-  <url><loc>https://pages.dev</loc></url>
-  <url><loc>https://pages.devimage-compressor.html</loc></url>
-  <url><loc>https://pages.devimage-resizer.html</loc></url>
-  <url><loc>https://pages.devjpg-to-png.html</loc></url>
-  <url><loc>https://pages.devword-counter.html</loc></url>
-  <url><loc>https://pages.devpercentage-calculator.html</loc></url>
-  <url><loc>https://pages.devsa-vat-calculator.html</loc></url>
-  <url><loc>https://pages.devsa-tax-calculator.html</loc></url>
-  <url><loc>https://pages.devsa-bond-calculator.html</loc></url>
-  <url><loc>https://pages.devpdf-merger.html</loc></url>
-  <url><loc>https://pages.devpdf-splitter.html</loc></url>
-  <url><loc>https://pages.devabout.html</loc></url>
-  <url><loc>https://pages.devcontact.html</loc></url>
-  <url><loc>https://pages.devprivacy.html</loc></url>
-  <url><loc>https://pages.devterms.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/</loc></url>
+  <url><loc>https://DOMAIN_HERE/image-compressor.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/image-resizer.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/jpg-to-png.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/word-counter.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/percentage-calculator.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/sa-vat-calculator.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/sa-tax-calculator.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/sa-bond-calculator.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/compound-interest-calculator.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/pdf-merger.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/pdf-splitter.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/about.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/contact.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/privacy.html</loc></url>
+  <url><loc>https://DOMAIN_HERE/terms.html</loc></url>
 </urlset>
