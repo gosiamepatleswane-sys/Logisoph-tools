@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>South African Car Finance & Balloon Payment Calculator | LOGISOPH Tools</title>
+  <meta name="description" content="Free South African Car Finance & Balloon Payment Calculator in ZAR. Calculate monthly vehicle instalments, residual balloon amounts, and total interest." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <style>
+    .car-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 18px; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+    .form-group input, .form-group select { width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: inherit; background: #fff; }
+    .result-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 22px; }
+    .res-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .res-card.highlight { background: #eff6ff; border-color: #93c5fd; }
+    .res-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+    .res-value { font-size: 1.35rem; font-weight: 800; color: var(--primary); }
+    .res-card.highlight .res-value { color: #1d4ed8; }
+    .res-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    .faq-section { margin-top: 32px; line-height: 1.75; }
+    .faq-section h2 { font-size: 1.25rem; color: var(--primary); margin: 20px 0 8px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container tool-page">
+    <div class="tool-header">
+      <span class="tool-tag">South Africa Vehicle Finance</span>
+      <h1>SA Car Finance & Balloon Payment Calculator</h1>
+      <p style="color:var(--text-muted);">Calculate your monthly South African car repayment, final balloon/residual lump sum, and total interest paid over your loan term.</p>
+    </div>
+
+    <div class="tool-box">
+      <div class="car-grid">
+        <div class="form-group">
+          <label for="carPrice">Vehicle Purchase Price (R)</label>
+          <input type="number" id="carPrice" value="320000" min="0" step="5000" />
+        </div>
+        <div class="form-group">
+          <label for="carDeposit">Cash Deposit / Trade-In (R)</label>
+          <input type="number" id="carDeposit" value="32000" min="0" step="1000" />
+        </div>
+        <div class="form-group">
+          <label for="carRate">Interest Rate (% per year)</label>
+          <input type="number" id="carRate" value="11.75" min="0" max="40" step="0.25" />
+        </div>
+      </div>
+
+      <div class="car-grid">
+        <div class="form-group">
+          <label for="carMonths">Repayment Period (Months)</label>
+          <select id="carMonths">
+            <option value="36">36 Months (3 Years)</option>
+            <option value="48">48 Months (4 Years)</option>
+            <option value="60" selected>60 Months (5 Years)</option>
+            <option value="72">72 Months (6 Years)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="balloonPercent">Balloon / Residual (%)</label>
+          <select id="balloonPercent">
+            <option value="0" selected>0% (No Balloon Payment)</option>
+            <option value="10">10% Balloon</option>
+            <option value="15">15% Balloon</option>
+            <option value="20">20% Balloon</option>
+            <option value="25">25% Balloon</option>
+            <option value="30">30% Balloon</option>
+            <option value="35">35% Balloon</option>
+            <option value="40">40% Balloon</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="button" class="btn" id="calcCarBtn">Calculate Car Repayment</button>
+
+      <div class="result-cards">
+        <div class="res-card highlight">
+          <div class="res-label">Monthly Car Instalment</div>
+          <div class="res-value" id="carMonthly">R 0.00</div>
+          <div class="res-sub" id="carFinancedSub">Amount Financed: R 0.00</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Final Balloon Payment</div>
+          <div class="res-value" id="carBalloon">R 0.00</div>
+          <div class="res-sub" id="balloonSub">Due after final month</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Total Interest Paid</div>
+          <div class="res-value" id="carInterest">R 0.00</div>
+          <div class="res-sub" id="carInterestSub">Extra cost of borrowing</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Total Amount Payable</div>
+          <div class="res-value" id="carTotal">R 0.00</div>
+          <div class="res-sub">Instalments + Balloon + Deposit</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-box faq-section">
+      <h2>How Balloon Payments Work in South Africa</h2>
+      <p>A <strong>balloon payment</strong> (also called a residual value) is a lump-sum percentage of the vehicle's purchase price set aside until the very end of your finance agreement. While it lowers your monthly instalments during the loan term, you still pay interest on the balloon amount throughout the contract—and you must either pay that lump sum in cash, refinance it, or trade in the car when the final month arrives.</p>
+
+      <h2>Frequently Asked Questions</h2>
+      <p><strong>Is a balloon payment a good idea?</strong><br />
+      A balloon payment makes monthly cash flow easier in the short term, but it increases your total interest paid and creates a large lump-sum debt at the end. If you plan to keep the car for more than 5 years, choosing <strong>0% balloon</strong> with a 10%–20% deposit saves the most money.</p>
+
+      <p><strong>What extra costs should I budget for when buying a car in SA?</strong><br />
+      Beyond your monthly instalment, South African banks require <strong>comprehensive car insurance</strong> on financed vehicles, plus a once-off initiation fee (around R1,207) and a monthly admin fee (around R69).</p>
+
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-top:16px;"><em>Disclaimer: Estimates exclude bank initiation fees, monthly service fees, and comprehensive vehicle insurance.</em></p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></div>
+          <p>Free Tools. Simple Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    function formatZAR(amount) {
+      return 'R ' + amount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function calculateCarFinance() {
+      const price = Math.max(0, parseFloat(document.getElementById('carPrice').value) || 0);
+      const deposit = Math.max(0, parseFloat(document.getElementById('carDeposit').value) || 0);
+      const annualRate = Math.max(0, parseFloat(document.getElementById('carRate').value) || 0);
+      const months = parseInt(document.getElementById('carMonths').value, 10) || 60;
+      const balloonPct = Math.max(0, parseFloat(document.getElementById('balloonPercent').value) || 0);
+
+      const financed = Math.max(0, price - deposit);
+      const balloonAmount = Math.min(financed, price * (balloonPct / 100));
+      const r = annualRate / 100 / 12;
+
+      let monthly = 0;
+      if (financed > 0) {
+        if (r === 0) {
+          monthly = (financed - balloonAmount) / months;
+        } else {
+          const pvBalloon = balloonAmount / Math.pow(1 + r, months);
+          const amortPrincipal = Math.max(0, financed - pvBalloon);
+          const factor = Math.pow(1 + r, months);
+          monthly = amortPrincipal * (r * factor) / (factor - 1);
+        }
+      }
+
+      const totalInstalments = monthly * months;
+      const totalInterest = Math.max(0, (totalInstalments + balloonAmount) - financed);
+      const totalCost = deposit + totalInstalments + balloonAmount;
+
+      document.getElementById('carMonthly').textContent = formatZAR(monthly);
+      document.getElementById('carFinancedSub').textContent = 'Amount Financed: ' + formatZAR(financed);
+      document.getElementById('carBalloon').textContent = formatZAR(balloonAmount);
+      document.getElementById('balloonSub').textContent = balloonPct > 0 ? balloonPct + '% due after month ' + months : 'No lump sum due at end';
+      document.getElementById('carInterest').textContent = formatZAR(totalInterest);
+      document.getElementById('carTotal').textContent = formatZAR(totalCost);
+    }
+
+    document.getElementById('calcCarBtn').addEventListener('click', calculateCarFinance);
