@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loan & Mortgage Repayment Calculator (USD, ZAR, GBP, EUR) | LOGISOPH Tools</title>
+  <meta name="description" content="Free online Loan and Mortgage Repayment Calculator. Calculate monthly payments, total interest, total repayment cost, and extra payment savings in USD, ZAR, GBP, or EUR." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <style>
+    .loan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 18px; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+    .form-group input, .form-group select { width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: inherit; background: #fff; }
+    .result-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 22px; }
+    .res-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .res-card.highlight { background: #eff6ff; border-color: #93c5fd; }
+    .res-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+    .res-value { font-size: 1.35rem; font-weight: 800; color: var(--primary); }
+    .res-card.highlight .res-value { color: #1d4ed8; }
+    .res-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    .faq-section { margin-top: 32px; line-height: 1.75; }
+    .faq-section h2 { font-size: 1.25rem; color: var(--primary); margin: 20px 0 8px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container tool-page">
+    <div class="tool-header">
+      <span class="tool-tag">Global Loans & Mortgages</span>
+      <h1>Loan & Mortgage Repayment Calculator</h1>
+      <p style="color:var(--text-muted);">Calculate your monthly payment, total interest, and payoff savings for any personal loan, auto loan, or mortgage in USD ($), ZAR (R), GBP (£), or EUR (€).</p>
+    </div>
+
+    <div class="tool-box">
+      <div class="loan-grid">
+        <div class="form-group">
+          <label for="loanCurrency">Currency</label>
+          <select id="loanCurrency">
+            <option value="$" selected>USD ($)</option>
+            <option value="R ">ZAR (R)</option>
+            <option value="£">GBP (£)</option>
+            <option value="€">EUR (€)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="loanPrincipal">Loan Amount</label>
+          <input type="number" id="loanPrincipal" value="25000" min="0" step="500" />
+        </div>
+        <div class="form-group">
+          <label for="loanApr">Annual Interest Rate (%)</label>
+          <input type="number" id="loanApr" value="7.5" min="0" max="100" step="0.1" />
+        </div>
+      </div>
+
+      <div class="loan-grid">
+        <div class="form-group">
+          <label for="loanTermYears">Loan Term (Years)</label>
+          <input type="number" id="loanTermYears" value="5" min="1" max="40" step="1" />
+        </div>
+        <div class="form-group">
+          <label for="extraMonthlyPay">Optional Extra Monthly Payment</label>
+          <input type="number" id="extraMonthlyPay" value="0" min="0" step="25" />
+        </div>
+      </div>
+
+      <button type="button" class="btn" id="calcLoanBtn">Calculate Loan Payment</button>
+
+      <div class="result-cards">
+        <div class="res-card highlight">
+          <div class="res-label">Monthly Payment</div>
+          <div class="res-value" id="loanMonthlyPay">$0.00</div>
+          <div class="res-sub" id="loanTermSub">60 monthly payments</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Total Interest Paid</div>
+          <div class="res-value" id="loanTotalInterest">$0.00</div>
+          <div class="res-sub" id="loanInterestRatio">0% of principal</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Total Amount Repaid</div>
+          <div class="res-value" id="loanTotalPaid">$0.00</div>
+          <div class="res-sub">Principal + total interest</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Interest Saved with Extra Pay</div>
+          <div class="res-value" id="loanSaved">$0.00</div>
+          <div class="res-sub" id="loanMonthsSaved">Add extra monthly payment</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-box faq-section">
+      <h2>How Loan Amortization Works</h2>
+      <p>With a fixed-rate amortized loan, your monthly payment stays the same throughout the entire loan term. In the early months, a larger portion of each payment goes toward interest; as the balance drops, more of each payment reduces your principal.</p>
+
+      <h2>Frequently Asked Questions</h2>
+      <p><strong>How do extra monthly payments save money?</strong><br />
+      Any extra amount you pay above your required monthly instalment goes directly toward reducing your principal balance, which lowers the interest charged in every remaining month and shortens your payoff timeline.</p>
+
+      <p><strong>Can I use this for both personal loans and mortgages?</strong><br />
+      Yes. Simply enter your loan amount (for example, $25,000 over 5 years for a car or personal loan, or $300,000 over 30 years for a mortgage) and switch the currency symbol to match your country.</p>
+
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-top:16px;"><em>Disclaimer: Results are estimates for educational planning only and exclude lender origination fees, property taxes, or insurance.</em></p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></div>
+          <p>Free Tools. Simple Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    function fmtLoan(sym, val) {
+      return sym + val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function calculateGenericLoan() {
+      const sym = document.getElementById('loanCurrency').value;
+      const principal = Math.max(0, parseFloat(document.getElementById('loanPrincipal').value) || 0);
+      const apr = Math.max(0, parseFloat(document.getElementById('loanApr').value) || 0);
+      const years = Math.min(40, Math.max(1, parseInt(document.getElementById('loanTermYears').value, 10) || 5));
+      const extra = Math.max(0, parseFloat(document.getElementById('extraMonthlyPay').value) || 0);
+
+      const totalMonths = years * 12;
+      const r = apr / 100 / 12;
+
+      let monthly = 0;
+      if (principal > 0) {
+        if (r === 0) {
+          monthly = principal / totalMonths;
+        } else {
+          const factor = Math.pow(1 + r, totalMonths);
+          monthly = principal * (r * factor) / (factor - 1);
+        }
+      }
+
+      const totalPaid = monthly * totalMonths;
+      const totalInterest = Math.max(0, totalPaid - principal);
+
+      let actualMonths = 0;
+      let actualInterest = 0;
+      let bal = principal;
+      const payWithExtra = monthly + extra;
+
+      if (principal > 0 && payWithExtra > 0) {
+        while (bal > 0.01 && actualMonths < totalMonths * 2) {
+          const mInt = bal * r;
+          if (payWithExtra <= mInt && r > 0) {
+            actualMonths = totalMonths;
+            actualInterest = totalInterest;
+            break;
+          }
+          actualInterest += mInt;
+          bal = bal + mInt - payWithExtra;
+          actualMonths++;
+        }
+      }
+
+      const savedInt = extra > 0 ? Math.max(0, totalInterest - actualInterest) : 0;
+      const savedMos = extra > 0 ? Math.max(0, totalMonths - actualMonths) : 0;
+      const intPct = principal > 0 ? (totalInterest / principal) * 100 : 0;
+
+      document.getElementById('loanMonthlyPay').textContent = fmtLoan(sym, monthly);
+      document.getElementById('loanTermSub').textContent = totalMonths + ' monthly payments';
+      document.getElementById('loanTotalInterest').textContent = fmtLoan(sym, totalInterest);
+      document.getElementById('loanInterestRatio').textContent = intPct.toFixed(1) + '% of principal';
+      document.getElementById('loanTotalPaid').textContent = fmtLoan(sym, totalPaid);
+      document.getElementById('loanSaved').textContent = fmtLoan(sym, savedInt);
+      document.getElementById('loanMonthsSaved').textContent = savedMos > 0
+        ? 'Paid off ' + savedMos + (savedMos === 1 ? ' month' : ' months') + ' faster'
+        : 'Add extra monthly payment';
+    }
+
+    document.getElementById('calcLoanBtn').addEventListener('click', calculateGenericLoan);
+    ['loanCurrency', 'loanPrincipal', 'loanApr', 'loanTermYears', 'extraMonthlyPay'].forEach(id => {
