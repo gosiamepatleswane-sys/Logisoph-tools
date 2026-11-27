@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>South African University APS Score Calculator (NSC Matric) | LOGISOPH Tools</title>
+  <meta name="description" content="Free South African University Admission Point Score (APS) Calculator for Matric NSC learners. Calculate Standard APS (UP, UJ, UNISA, TUT), Wits APS, and UCT FPS instantly." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <style>
+    .subject-row { display: grid; grid-template-columns: 2fr 1fr 90px; gap: 12px; align-items: center; margin-bottom: 12px; }
+    .subject-row label { font-weight: 600; font-size: 0.92rem; }
+    .subject-row input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: inherit; }
+    .level-pill { text-align: center; background: #eff6ff; color: #1d4ed8; font-weight: 700; padding: 8px 10px; border-radius: 8px; font-size: 0.9rem; }
+    .result-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-top: 22px; }
+    .res-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .res-card.highlight { background: #eff6ff; border-color: #93c5fd; }
+    .res-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+    .res-value { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
+    .res-card.highlight .res-value { color: #1d4ed8; }
+    .res-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    .faq-section { margin-top: 32px; line-height: 1.75; }
+    .faq-section h2 { font-size: 1.25rem; color: var(--primary); margin: 20px 0 8px; }
+    .aps-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.9rem; }
+    .aps-table th, .aps-table td { border: 1px solid var(--border); padding: 9px 10px; text-align: left; }
+    .aps-table th { background: #f1f5f9; }
+    @media (max-width: 600px) { .subject-row { grid-template-columns: 1fr 95px 75px; gap: 8px; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container tool-page">
+    <div class="tool-header">
+      <span class="tool-tag">South Africa Education • Matric NSC</span>
+      <h1>SA University APS Score Calculator</h1>
+      <p style="color:var(--text-muted);">Enter your 7 Matric NSC subject percentages (%) to instantly calculate your Standard APS (UP, UJ, UNISA, TUT, NWU), Wits APS, and UCT Faculty Points Score.</p>
+    </div>
+
+    <div class="tool-box">
+      <div class="subject-row" style="font-size:0.82rem; color:var(--text-muted); font-weight:700;">
+        <div>NSC Subject</div>
+        <div>Mark (%)</div>
+        <div style="text-align:center;">NSC Level</div>
+      </div>
+
+      <div class="subject-row">
+        <label for="sub1">1. Home Language (e.g. English / Sepedi)</label>
+        <input type="number" id="sub1" value="68" min="0" max="100" />
+        <div class="level-pill" id="lvl1">Level 5</div>
+      </div>
+
+      <div class="subject-row">
+        <label for="sub2">2. First Additional Language</label>
+        <input type="number" id="sub2" value="72" min="0" max="100" />
+        <div class="level-pill" id="lvl2">Level 6</div>
+      </div>
+
+      <div class="subject-row">
+        <label for="sub3">3. Mathematics / Maths Literacy</label>
+        <input type="number" id="sub3" value="65" min="0" max="100" />
+        <div class="level-pill" id="lvl3">Level 5</div>
+      </div>
+
+      <div class="subject-row">
+        <label for="sub4">4. Elective Subject 1 (e.g. Physical Sciences)</label>
+        <input type="number" id="sub4" value="62" min="0" max="100" />
+        <div class="level-pill" id="lvl4">Level 5</div>
+      </div>
+
+      <div class="subject-row">
+        <label for="sub5">5. Elective Subject 2 (e.g. Life Sciences)</label>
+        <input type="number" id="sub5" value="70" min="0" max="100" />
+        <div class="level-pill" id="lvl5">Level 6</div>
+      </div>
+
+      <div class="subject-row">
+        <label for="sub6">6. Elective Subject 3 (e.g. Accounting / Geography)</label>
+        <input type="number" id="sub6" value="66" min="0" max="100" />
+        <div class="level-pill" id="lvl6">Level 5</div>
+      </div>
+
+      <div class="subject-row">
+        <label for="sub7">7. Life Orientation (LO)</label>
+        <input type="number" id="sub7" value="78" min="0" max="100" />
+        <div class="level-pill" id="lvl7">Level 6</div>
+      </div>
+
+      <button type="button" class="btn" id="calcApsBtn">Calculate My APS Score</button>
+
+      <div class="result-cards">
+        <div class="res-card highlight">
+          <div class="res-label">Standard University APS</div>
+          <div class="res-value" id="stdAps">0 / 42</div>
+          <div class="res-sub">Excludes Life Orientation (UP, UJ, UNISA, TUT)</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Total APS (With LO)</div>
+          <div class="res-value" id="totalAps">0 / 49</div>
+          <div class="res-sub">All 7 NSC subjects combined</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Est. Wits University APS</div>
+          <div class="res-value" id="witsAps">0</div>
+          <div class="res-sub">Includes Wits LO & 60%+ English/Maths bonus</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Est. UCT FPS (Out of 600)</div>
+          <div class="res-value" id="uctFps">0 / 600</div>
+          <div class="res-sub">Sum of 6 best subjects (excl. LO)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-box faq-section">
+      <h2>NSC Achievement Levels & APS Points Scale</h2>
+      <p>South African universities convert your Matric National Senior Certificate (NSC) percentages into APS points using the official 7-level scale:</p>
+      <table class="aps-table">
+        <thead>
+          <tr><th>NSC Percentage</th><th>Achievement Level</th><th>Standard APS Points</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>80% – 100%</td><td>Level 7 (Outstanding)</td><td>7 points</td></tr>
+          <tr><td>70% – 79%</td><td>Level 6 (Meritorious)</td><td>6 points</td></tr>
+          <tr><td>60% – 69%</td><td>Level 5 (Substantial)</td><td>5 points</td></tr>
+          <tr><td>50% – 59%</td><td>Level 4 (Adequate)</td><td>4 points</td></tr>
+          <tr><td>40% – 49%</td><td>Level 3 (Moderate)</td><td>3 points</td></tr>
+          <tr><td>30% – 39%</td><td>Level 2 (Elementary)</td><td>2 points</td></tr>
+          <tr><td>0% – 29%</td><td>Level 1 (Not Achieved)</td><td>1 point</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Frequently Asked Questions</h2>
+      <p><strong>Does Life Orientation (LO) count toward my APS score?</strong><br />
+      Most South African universities—including the <strong>University of Pretoria (UP)</strong>, <strong>University of Johannesburg (UJ)</strong>, <strong>UNISA</strong>, <strong>NWU</strong>, and <strong>TUT</strong>—exclude Life Orientation when calculating your APS out of 42 (though you must still pass LO). Wits University awards up to 4 points for LO (4 points for 80%+, 3 for 70–79%, 2 for 60–69%, 1 for 50–59%).</p>
+
+      <p><strong>What APS do I need for a Bachelor's Degree, Diploma, or Higher Certificate?</strong><br />
+      Entry requirements vary by university and faculty, but typically a <strong>Higher Certificate</strong> starts around <strong>15–18 APS</strong>, a <strong>Diploma</strong> starts around <strong>19–24 APS</strong>, and a <strong>Bachelor's Degree</strong> generally requires <strong>24 to 36+ APS</strong> alongside specific subject minimums in English and Mathematics.</p>
+
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-top:16px;"><em>Disclaimer: Always verify exact faculty admission requirements and Mathematical Literacy rules directly in your chosen university's official prospectus.</em></p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></div>
+          <p>Free Tools. Simple Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    function getNscLevel(pct) {
+      if (pct >= 80) return 7;
+      if (pct >= 70) return 6;
+      if (pct >= 60) return 5;
+      if (pct >= 50) return 4;
+      if (pct >= 40) return 3;
+      if (pct >= 30) return 2;
+      return 1;
+    }
+
+    function getWitsSubjectPts(pct, isEnglishOrMaths) {
+      let pts = 0;
+      if (pct >= 90) pts = 8;
+      else if (pct >= 80) pts = 7;
+      else if (pct >= 70) pts = 6;
+      else if (pct >= 60) pts = 5;
+      else if (pct >= 50) pts = 4;
+      else if (pct >= 40) pts = 3;
+      else pts = 0;
+      if (isEnglishOrMaths && pct >= 60) pts += 2;
+      return pts;
+    }
+
