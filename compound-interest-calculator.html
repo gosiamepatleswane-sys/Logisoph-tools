@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compound Interest & Investment Growth Calculator (USD, ZAR, GBP, EUR) | LOGISOPH Tools</title>
+  <meta name="description" content="Free online Compound Interest and Investment Growth Calculator. Calculate future savings value, total contributions, and compound interest earned in USD, ZAR, GBP, or EUR." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <style>
+    .ci-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 18px; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+    .form-group input, .form-group select { width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: inherit; background: #fff; }
+    .result-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 22px; }
+    .res-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .res-card.highlight { background: #eff6ff; border-color: #93c5fd; }
+    .res-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+    .res-value { font-size: 1.35rem; font-weight: 800; color: var(--primary); }
+    .res-card.highlight .res-value { color: #1d4ed8; }
+    .res-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    .schedule-wrap { margin-top: 24px; overflow-x: auto; }
+    .ci-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .ci-table th, .ci-table td { border: 1px solid var(--border); padding: 9px 10px; text-align: right; }
+    .ci-table th:first-child, .ci-table td:first-child { text-align: left; }
+    .ci-table th { background: #f1f5f9; }
+    .faq-section { margin-top: 32px; line-height: 1.75; }
+    .faq-section h2 { font-size: 1.25rem; color: var(--primary); margin: 20px 0 8px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container tool-page">
+    <div class="tool-header">
+      <span class="tool-tag">Global Savings & Investment</span>
+      <h1>Compound Interest & Investment Calculator</h1>
+      <p style="color:var(--text-muted);">Calculate how your initial savings and monthly contributions grow over time with compound interest in USD ($), ZAR (R), GBP (£), or EUR (€).</p>
+    </div>
+
+    <div class="tool-box">
+      <div class="ci-grid">
+        <div class="form-group">
+          <label for="currencySymbol">Currency</label>
+          <select id="currencySymbol">
+            <option value="$" selected>USD ($)</option>
+            <option value="R ">ZAR (R)</option>
+            <option value="£">GBP (£)</option>
+            <option value="€">EUR (€)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="initialDeposit">Starting Principal</label>
+          <input type="number" id="initialDeposit" value="5000" min="0" step="100" />
+        </div>
+        <div class="form-group">
+          <label for="monthlyDeposit">Monthly Contribution</label>
+          <input type="number" id="monthlyDeposit" value="250" min="0" step="25" />
+        </div>
+      </div>
+
+      <div class="ci-grid">
+        <div class="form-group">
+          <label for="annualRate">Expected Annual Return (%)</label>
+          <input type="number" id="annualRate" value="8.5" min="0" max="100" step="0.1" />
+        </div>
+        <div class="form-group">
+          <label for="yearsGrow">Investment Period (Years)</label>
+          <input type="number" id="yearsGrow" value="15" min="1" max="60" step="1" />
+        </div>
+        <div class="form-group">
+          <label for="compoundFreq">Compound Frequency</label>
+          <select id="compoundFreq">
+            <option value="12" selected>Monthly (12x / year)</option>
+            <option value="4">Quarterly (4x / year)</option>
+            <option value="1">Annually (1x / year)</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="button" class="btn" id="calcCiBtn">Calculate Compound Growth</button>
+
+      <div class="result-cards">
+        <div class="res-card highlight">
+          <div class="res-label">Future Investment Value</div>
+          <div class="res-value" id="futureBalance">$0.00</div>
+          <div class="res-sub" id="yearsSub">After 15 years</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Total Principal Contributed</div>
+          <div class="res-value" id="totalPrincipal">$0.00</div>
+          <div class="res-sub" id="principalShare">Starting + monthly deposits</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Total Compound Interest Earned</div>
+          <div class="res-value" id="totalInterestEarned">$0.00</div>
+          <div class="res-sub" id="interestShare">0% of final balance</div>
+        </div>
+      </div>
+
+      <div class="schedule-wrap">
+        <h3 style="font-size:1.05rem; margin-bottom:10px; color:var(--primary);">Year-by-Year Growth Breakdown</h3>
+        <table class="ci-table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Total Contributions</th>
+              <th>Interest Earned</th>
+              <th>Ending Balance</th>
+            </tr>
+          </thead>
+          <tbody id="ciScheduleBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tool-box faq-section">
+      <h2>How Compound Interest Works</h2>
+      <p><strong>Compound interest</strong> is interest earned on both your original money and the accumulated interest from previous periods. Instead of growing in a straight line, your savings accelerate over time because each month's return generates its own returns in future months.</p>
+
+      <h2>Frequently Asked Questions</h2>
+      <p><strong>What is the Rule of 72?</strong><br />
+      The Rule of 72 is a quick way to estimate how many years it takes to double your money: divide <strong>72 by your annual interest rate</strong>. For example, at an 8% annual return, your money doubles roughly every <strong>9 years</strong> (72 ÷ 8 = 9).</p>
+
+      <p><strong>Why does starting early matter so much?</strong><br />
+      Even small monthly deposits grow substantially over 15 to 30 years because compound growth does most of the heavy lifting in the later years. In South Africa, Tax-Free Savings Accounts (TFSAs) and low-cost index funds allow investors to keep 100% of their compound returns tax-free up to annual limits.</p>
+
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-top:16px;"><em>Disclaimer: Projections assume a constant rate of return for educational planning only and do not account for inflation, taxes, or fund fees.</em></p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></div>
+          <p>Free Tools. Simple Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    function fmtMoney(sym, val) {
+      return sym + val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function calculateCompound() {
+      const sym = document.getElementById('currencySymbol').value;
+      const start = Math.max(0, parseFloat(document.getElementById('initialDeposit').value) || 0);
+      const monthly = Math.max(0, parseFloat(document.getElementById('monthlyDeposit').value) || 0);
+      const ratePct = Math.max(0, parseFloat(document.getElementById('annualRate').value) || 0);
+      const years = Math.min(60, Math.max(1, parseInt(document.getElementById('yearsGrow').value, 10) || 15));
+      const freq = parseInt(document.getElementById('compoundFreq').value, 10) || 12;
+
+      const annualRate = ratePct / 100;
+      const periodRate = annualRate / freq;
+      const monthsPerPeriod = 12 / freq;
+
+      let balance = start;
+      let totalContrib = start;
+      const tbody = document.getElementById('ciScheduleBody');
+      tbody.innerHTML = '';
+
+      for (let y = 1; y <= years; y++) {
+        for (let m = 1; m <= 12; m++) {
+          balance += monthly;
+          totalContrib += monthly;
+          if (m % monthsPerPeriod === 0) {
+            balance += balance * periodRate;
+          }
+        }
+        const interestSoFar = Math.max(0, balance - totalContrib);
+        const row = `<tr>
+          <td>Year ${y}</td>
+          <td>${fmtMoney(sym, totalContrib)}</td>
+          <td>${fmtMoney(sym, interestSoFar)}</td>
+          <td><strong>${fmtMoney(sym, balance)}</strong></td>
+        </tr>`;
+        tbody.insertAdjacentHTML('beforeend', row);
+      }
+
+      const totalInterest = Math.max(0, balance - totalContrib);
