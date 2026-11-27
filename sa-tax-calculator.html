@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SARS Tax Calculator 2026/2027 — South Africa Take-Home Pay & PAYE | LOGISOPH Tools</title>
+  <meta name="description" content="Free South African SARS 2026/2027 Income Tax, PAYE, UIF, and Net Take-Home Salary Calculator. Includes 2027 tax brackets, age rebates, medical aid credits, and retirement deductions." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <style>
+    .tax-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 18px; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+    .form-group input, .form-group select { width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: inherit; background: #fff; }
+    .result-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 22px; }
+    .res-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .res-card.highlight { background: #eff6ff; border-color: #93c5fd; }
+    .res-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+    .res-value { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
+    .res-card.highlight .res-value { color: #1d4ed8; }
+    .res-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    .faq-section { margin-top: 32px; line-height: 1.75; }
+    .faq-section h2 { font-size: 1.25rem; color: var(--primary); margin: 20px 0 8px; }
+    .tax-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.9rem; }
+    .tax-table th, .tax-table td { border: 1px solid var(--border); padding: 10px; text-align: left; }
+    .tax-table th { background: #f1f5f9; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container tool-page">
+    <div class="tool-header">
+      <span class="tool-tag">South Africa Finance • 2026/2027 Tax Year</span>
+      <h1>SARS Take-Home Salary & PAYE Tax Calculator</h1>
+      <p style="color:var(--text-muted);">Calculate your South African monthly net salary, PAYE income tax, and UIF using official SARS 2027 tax tables (1 March 2026 – 28 February 2027).</p>
+    </div>
+
+    <div class="tool-box">
+      <div class="tax-grid">
+        <div class="form-group">
+          <label for="grossSalary">Gross Salary (ZAR)</label>
+          <input type="number" id="grossSalary" value="25000" min="0" step="100" />
+        </div>
+        <div class="form-group">
+          <label for="payPeriod">Salary Frequency</label>
+          <select id="payPeriod">
+            <option value="monthly" selected>Per Month</option>
+            <option value="annual">Per Year</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="ageGroup">Your Age Group</label>
+          <select id="ageGroup">
+            <option value="under65" selected>Under 65</option>
+            <option value="65to74">65 to 74</option>
+            <option value="75plus">75 and older</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="tax-grid">
+        <div class="form-group">
+          <label for="raContribution">Monthly Pension / RA Contribution (R)</label>
+          <input type="number" id="raContribution" value="0" min="0" step="100" />
+        </div>
+        <div class="form-group">
+          <label for="medicalMembers">Medical Aid People Covered (0 = None)</label>
+          <input type="number" id="medicalMembers" value="0" min="0" max="20" step="1" />
+        </div>
+        <div class="form-group">
+          <label for="includeUif">Include 1% UIF Deduction?</label>
+          <select id="includeUif">
+            <option value="yes" selected>Yes (Standard Employee)</option>
+            <option value="no">No (Exempt / Contractor)</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="button" class="btn" id="calcTaxBtn">Calculate Take-Home Pay</button>
+
+      <div class="result-cards" id="taxResults">
+        <div class="res-card highlight">
+          <div class="res-label">Monthly Take-Home Pay</div>
+          <div class="res-value" id="netMonthly">R 0.00</div>
+          <div class="res-sub" id="netAnnual">Annual Net: R 0.00</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Monthly PAYE Tax</div>
+          <div class="res-value" id="payeMonthly">R 0.00</div>
+          <div class="res-sub" id="effectiveRate">Effective Tax Rate: 0.0%</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Monthly UIF (1%)</div>
+          <div class="res-value" id="uifMonthly">R 0.00</div>
+          <div class="res-sub">Capped at R177.12/month</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Medical Tax Credit</div>
+          <div class="res-value" id="medCreditMonthly">R 0.00</div>
+          <div class="res-sub" id="marginalRate">Marginal Bracket: 18%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-box faq-section">
+      <h2>SARS 2026/2027 Individual Income Tax Brackets</h2>
+      <p>For the 2027 tax year (1 March 2026 to 28 February 2027), SARS applies seven progressive tax brackets to annual taxable income:</p>
+      <table class="tax-table">
+        <thead>
+          <tr><th>Annual Taxable Income (R)</th><th>Rate of Tax</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>R0 – R245,100</td><td>18% of taxable income</td></tr>
+          <tr><td>R245,101 – R383,100</td><td>R44,118 + 26% above R245,100</td></tr>
+          <tr><td>R383,101 – R530,200</td><td>R79,998 + 31% above R383,100</td></tr>
+          <tr><td>R530,201 – R695,800</td><td>R125,599 + 36% above R530,200</td></tr>
+          <tr><td>R695,801 – R887,000</td><td>R185,215 + 39% above R695,800</td></tr>
+          <tr><td>R887,001 – R1,878,600</td><td>R259,783 + 41% above R887,000</td></tr>
+          <tr><td>R1,878,601 and above</td><td>R666,339 + 45% above R1,878,600</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Frequently Asked Questions (SARS 2026/2027)</h2>
+      <p><strong>What is the tax-free threshold for 2026/2027?</strong><br />
+      If you are under 65, you pay zero income tax if your annual taxable income is below <strong>R99,000</strong> (R8,250/month). For ages 65–74 the threshold is <strong>R153,250</strong>, and for 75 and older it is <strong>R171,300</strong>.</p>
+
+      <p><strong>How is UIF calculated in South Africa?</strong><br />
+      Employees contribute 1% of gross monthly remuneration to the Unemployment Insurance Fund (UIF), capped at the monthly earnings ceiling of R17,712. That means the maximum employee UIF deduction is <strong>R177.12 per month</strong>.</p>
+
+      <p><strong>How do medical aid tax credits work?</strong><br />
+      For 2026/2027, SARS grants a monthly Medical Scheme Fees Tax Credit of <strong>R376</strong> each for the main member and first dependant, and <strong>R254</strong> for every additional dependant.</p>
+
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-top:16px;"><em>Disclaimer: This calculator provides estimates based on standard SARS 2026/2027 PAYE tables for informational purposes only and does not constitute formal tax advice.</em></p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></div>
+          <p>Free Tools. Simple Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    function formatZAR(amount) {
+      return 'R ' + amount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function calculateSATax() {
+      const rawGross = Math.max(0, parseFloat(document.getElementById('grossSalary').value) || 0);
+      const period = document.getElementById('payPeriod').value;
+      const age = document.getElementById('ageGroup').value;
+      const monthlyRA = Math.max(0, parseFloat(document.getElementById('raContribution').value) || 0);
+      const medMembers = Math.max(0, parseInt(document.getElementById('medicalMembers').value, 10) || 0);
+      const includeUif = document.getElementById('includeUif').value === 'yes';
+
+      const annualGross = period === 'monthly' ? rawGross * 12 : rawGross;
+      const monthlyGross = annualGross / 12;
+
+      const maxAnnualRA = Math.min(annualGross * 0.275, 430000);
+      const deductibleAnnualRA = Math.min(monthlyRA * 12, maxAnnualRA);
+      const taxableAnnual = Math.max(0, annualGross - deductibleAnnualRA);
+
+      let grossTax = 0;
+      let marginal = 18;
+
+      if (taxableAnnual <= 245100) {
+        grossTax = taxableAnnual * 0.18;
+        marginal = 18;
