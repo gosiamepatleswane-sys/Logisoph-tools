@@ -407,3 +407,7 @@ footer {
     font-size: 1.9rem;
   }
 }
+.tool-page { padding-left: 16px; padding-right: 16px; }
+.tool-header { padding: 0 4px; margin-bottom: 20px; }
+.tool-header h1 { line-height: 1.2; margin: 8px 0; }
+.tool-header p { line-height: 1.5; }
