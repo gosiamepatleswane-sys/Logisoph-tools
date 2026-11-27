@@ -143,11 +143,10 @@
   </footer>
 
   <script src="main.js"></script>
-  <script>
+   <script>
     function formatZAR(amount) {
       return 'R ' + amount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
-
     function calcTransferDuty(price) {
       if (price <= 1210000) return 0;
       if (price <= 1663800) return (price - 1210000) * 0.03;
@@ -156,7 +155,6 @@
       if (price <= 13310000) return 106784 + (price - 2994800) * 0.11;
       return 1241456 + (price - 13310000) * 0.13;
     }
-
     function calculateBond() {
       const price = Math.max(0, parseFloat(document.getElementById('purchasePrice').value) || 0);
       const deposit = Math.max(0, parseFloat(document.getElementById('depositAmount').value) || 0);
@@ -170,9 +168,8 @@
 
       let baseMonthly = 0;
       if (principal > 0) {
-        if (monthlyRate === 0) {
-          baseMonthly = principal / totalMonths;
-        } else {
+        if (monthlyRate === 0) baseMonthly = principal / totalMonths;
+        else {
           const factor = Math.pow(1 + monthlyRate, totalMonths);
           baseMonthly = principal * (monthlyRate * factor) / (factor - 1);
         }
@@ -180,18 +177,42 @@
 
       const baseTotalPaid = baseMonthly * totalMonths;
       const baseTotalInterest = Math.max(0, baseTotalPaid - principal);
-
-      let actualMonths = 0;
-      let actualInterest = 0;
-      let balance = principal;
+      let actualMonths = 0, actualInterest = 0, balance = principal;
       const paymentWithExtra = baseMonthly + extra;
 
       if (principal > 0 && paymentWithExtra > 0) {
         while (balance > 0.01 && actualMonths < totalMonths * 2) {
           const interestForMonth = balance * monthlyRate;
           if (paymentWithExtra <= interestForMonth && monthlyRate > 0) {
-            actualMonths = totalMonths;
-            actualInterest = baseTotalInterest;
-            break;
+            actualMonths = totalMonths; actualInterest = baseTotalInterest; break;
           }
           actualInterest += interestForMonth;
+          balance = balance + interestForMonth - paymentWithExtra;
+          actualMonths++;
+        }
+      }
+
+      const interestSaved = extra > 0 ? Math.max(0, baseTotalInterest - actualInterest) : 0;
+      const monthsSaved = extra > 0 ? Math.max(0, totalMonths - actualMonths) : 0;
+      const duty = calcTransferDuty(price);
+
+      document.getElementById('monthlyRepayment').textContent = formatZAR(baseMonthly);
+      document.getElementById('loanPrincipalSub').textContent = 'Loan Amount: ' + formatZAR(principal);
+      document.getElementById('totalInterest').textContent = formatZAR(baseTotalInterest);
+      document.getElementById('totalRepaidSub').textContent = 'Total Repaid: ' + formatZAR(baseTotalPaid);
+      document.getElementById('transferDuty').textContent = formatZAR(duty);
+      document.getElementById('dutyNote').textContent = duty === 0 ? 'Exempt (R1,210,000 or less)' : 'SARS Transfer Duty scale';
+      document.getElementById('interestSaved').textContent = formatZAR(interestSaved);
+      document.getElementById('timeSavedSub').textContent = monthsSaved > 0
+        ? 'Paid off ' + Math.floor(monthsSaved / 12) + ' yrs, ' + (monthsSaved % 12) + ' mos faster'
+        : 'Add extra monthly R to save';
+    }
+    document.getElementById('calcBondBtn').addEventListener('click', calculateBond);
+    ['purchasePrice', 'depositAmount', 'interestRate', 'loanYears', 'extraMonthly'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calculateBond);
+      document.getElementById(id).addEventListener('change', calculateBond);
+    });
+    calculateBond();
+  </script>
+</body>
+</html>
