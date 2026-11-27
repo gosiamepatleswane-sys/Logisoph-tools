@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>South African Home Loan & Bond Repayment Calculator + Transfer Duty | LOGISOPH Tools</title>
+  <meta name="description" content="Free South African Home Loan & Bond Repayment Calculator in ZAR. Calculate monthly bond instalments, total interest, extra payment savings, and SARS transfer duty." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <style>
+    .bond-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 18px; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+    .form-group input, .form-group select { width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: inherit; background: #fff; }
+    .result-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 22px; }
+    .res-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .res-card.highlight { background: #eff6ff; border-color: #93c5fd; }
+    .res-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+    .res-value { font-size: 1.35rem; font-weight: 800; color: var(--primary); }
+    .res-card.highlight .res-value { color: #1d4ed8; }
+    .res-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    .faq-section { margin-top: 32px; line-height: 1.75; }
+    .faq-section h2 { font-size: 1.25rem; color: var(--primary); margin: 20px 0 8px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container tool-page">
+    <div class="tool-header">
+      <span class="tool-tag">South Africa Property & Finance</span>
+      <h1>SA Home Loan & Bond Repayment Calculator</h1>
+      <p style="color:var(--text-muted);">Estimate your monthly South African home loan instalment, total interest over the bond term, SARS transfer duty, and savings from paying extra each month.</p>
+    </div>
+
+    <div class="tool-box">
+      <div class="bond-grid">
+        <div class="form-group">
+          <label for="purchasePrice">Property Purchase Price (R)</label>
+          <input type="number" id="purchasePrice" value="1500000" min="0" step="10000" />
+        </div>
+        <div class="form-group">
+          <label for="depositAmount">Cash Deposit (R)</label>
+          <input type="number" id="depositAmount" value="150000" min="0" step="5000" />
+        </div>
+        <div class="form-group">
+          <label for="interestRate">Interest Rate (% per year)</label>
+          <input type="number" id="interestRate" value="10.75" min="0" max="40" step="0.05" />
+        </div>
+      </div>
+
+      <div class="bond-grid">
+        <div class="form-group">
+          <label for="loanYears">Loan Term (Years)</label>
+          <select id="loanYears">
+            <option value="10">10 Years</option>
+            <option value="15">15 Years</option>
+            <option value="20" selected>20 Years (Standard SA)</option>
+            <option value="25">25 Years</option>
+            <option value="30">30 Years</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="extraMonthly">Optional Extra Monthly Payment (R)</label>
+          <input type="number" id="extraMonthly" value="0" min="0" step="250" />
+        </div>
+      </div>
+
+      <button type="button" class="btn" id="calcBondBtn">Calculate Bond Repayment</button>
+
+      <div class="result-cards">
+        <div class="res-card highlight">
+          <div class="res-label">Monthly Bond Repayment</div>
+          <div class="res-value" id="monthlyRepayment">R 0.00</div>
+          <div class="res-sub" id="loanPrincipalSub">Loan Amount: R 0.00</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Total Interest Paid</div>
+          <div class="res-value" id="totalInterest">R 0.00</div>
+          <div class="res-sub" id="totalRepaidSub">Total Repaid: R 0.00</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Est. SARS Transfer Duty</div>
+          <div class="res-value" id="transferDuty">R 0.00</div>
+          <div class="res-sub" id="dutyNote">R0 up to R1,210,000</div>
+        </div>
+        <div class="res-card">
+          <div class="res-label">Extra Payment Savings</div>
+          <div class="res-value" id="interestSaved">R 0.00</div>
+          <div class="res-sub" id="timeSavedSub">Add extra monthly R to save</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-box faq-section">
+      <h2>How Home Loan Repayments Work in South Africa</h2>
+      <p>South African banks (FNB, Standard Bank, Absa, Nedbank, and Capitec/SA Home Loans) typically price home loans relative to the <strong>Prime Lending Rate</strong> over a standard <strong>20-year</strong> repayment term. Putting down a 10% to 20% deposit lowers your loan-to-value ratio and can help you negotiate a lower interest rate below prime.</p>
+
+      <h2>Frequently Asked Questions</h2>
+      <p><strong>What is the SARS Transfer Duty threshold?</strong><br />
+      Properties purchased for <strong>R1,210,000 or less</strong> are completely exempt from SARS Transfer Duty (R0). Above R1,210,000, transfer duty is calculated on a progressive sliding scale starting at 3% on the portion above R1,210,000. Note that attorney bond registration and transfer fees still apply separately.</p>
+
+      <p><strong>How much household income do I need to qualify for a bond?</strong><br />
+      Most South African banks require your monthly bond instalment to be no more than <strong>30% of your gross monthly household income</strong>, subject to your credit score and monthly expenses under the National Credit Act.</p>
+
+      <p><strong>How much can paying extra save on a South African home loan?</strong><br />
+      Even paying an extra <strong>R1,000 per month</strong> on a R1.35 million bond can cut years off your loan term and save hundreds of thousands of Rands in interest.</p>
+
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-top:16px;"><em>Disclaimer: Calculations are estimates for planning purposes only and exclude monthly bank service fees, homeowners insurance, and conveyancing attorney fees.</em></p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></div>
+          <p>Free Tools. Simple Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    function formatZAR(amount) {
+      return 'R ' + amount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function calcTransferDuty(price) {
+      if (price <= 1210000) return 0;
+      if (price <= 1663800) return (price - 1210000) * 0.03;
+      if (price <= 2329300) return 13614 + (price - 1663800) * 0.06;
+      if (price <= 2994800) return 53544 + (price - 2329300) * 0.08;
+      if (price <= 13310000) return 106784 + (price - 2994800) * 0.11;
+      return 1241456 + (price - 13310000) * 0.13;
+    }
+
+    function calculateBond() {
+      const price = Math.max(0, parseFloat(document.getElementById('purchasePrice').value) || 0);
+      const deposit = Math.max(0, parseFloat(document.getElementById('depositAmount').value) || 0);
+      const annualRate = Math.max(0, parseFloat(document.getElementById('interestRate').value) || 0);
+      const years = parseInt(document.getElementById('loanYears').value, 10) || 20;
+      const extra = Math.max(0, parseFloat(document.getElementById('extraMonthly').value) || 0);
+
+      const principal = Math.max(0, price - deposit);
+      const monthlyRate = annualRate / 100 / 12;
+      const totalMonths = years * 12;
+
+      let baseMonthly = 0;
+      if (principal > 0) {
+        if (monthlyRate === 0) {
+          baseMonthly = principal / totalMonths;
+        } else {
+          const factor = Math.pow(1 + monthlyRate, totalMonths);
+          baseMonthly = principal * (monthlyRate * factor) / (factor - 1);
+        }
+      }
+
+      const baseTotalPaid = baseMonthly * totalMonths;
+      const baseTotalInterest = Math.max(0, baseTotalPaid - principal);
+
+      let actualMonths = 0;
+      let actualInterest = 0;
+      let balance = principal;
+      const paymentWithExtra = baseMonthly + extra;
+
+      if (principal > 0 && paymentWithExtra > 0) {
+        while (balance > 0.01 && actualMonths < totalMonths * 2) {
+          const interestForMonth = balance * monthlyRate;
+          if (paymentWithExtra <= interestForMonth && monthlyRate > 0) {
+            actualMonths = totalMonths;
+            actualInterest = baseTotalInterest;
+            break;
+          }
+          actualInterest += interestForMonth;
