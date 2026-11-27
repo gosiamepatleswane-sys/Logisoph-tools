@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Cover Letter & Resignation Letter Generator | LOGISOPH Tools</title>
+  <meta name="description" content="Free online Cover Letter and Resignation Letter Generator. Create clean, professional job application cover letters and formal resignation notices in seconds." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <style>
+    .tab-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .mode-btn { padding: 10px 18px; border-radius: 8px; border: 1px solid var(--border); background: #f8fafc; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .mode-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .letter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 16px; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.98rem; font-family: inherit; background: #fff; }
+    .output-box { width: 100%; min-height: 290px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #f8fafc; font-family: inherit; font-size: 0.98rem; line-height: 1.65; margin-top: 16px; white-space: pre-wrap; }
+    .action-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .faq-section { margin-top: 32px; line-height: 1.75; }
+    .faq-section h2 { font-size: 1.25rem; color: var(--primary); margin: 20px 0 8px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></a>
+      <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle Menu">☰</button>
+      <nav>
+        <ul id="navMenu">
+          <li><a href="index.html">All Tools</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container tool-page">
+    <div class="tool-header">
+      <span class="tool-tag">Career & Text Utility</span>
+      <h1>Cover Letter & Resignation Letter Generator</h1>
+      <p style="color:var(--text-muted);">Generate a polished, ready-to-send job application cover letter or formal resignation letter in seconds—100% private in your browser.</p>
+    </div>
+
+    <div class="tool-box">
+      <div class="tab-row">
+        <button type="button" class="mode-btn active" id="btnCoverMode">Job Application Cover Letter</button>
+        <button type="button" class="mode-btn" id="btnResignMode">Formal Resignation Letter</button>
+      </div>
+
+      <div id="coverFields">
+        <div class="letter-grid">
+          <div class="form-group">
+            <label for="clName">Your Full Name</label>
+            <input type="text" id="clName" placeholder="e.g. Thabo Mokoena" />
+          </div>
+          <div class="form-group">
+            <label for="clEmail">Your Email & Phone</label>
+            <input type="text" id="clEmail" placeholder="e.g. thabo@email.com | 072 000 0000" />
+          </div>
+          <div class="form-group">
+            <label for="clRole">Job Title Applying For</label>
+            <input type="text" id="clRole" placeholder="e.g. Administrative Assistant" />
+          </div>
+        </div>
+        <div class="letter-grid">
+          <div class="form-group">
+            <label for="clCompany">Company Name</label>
+            <input type="text" id="clCompany" placeholder="e.g. Horizon Solutions" />
+          </div>
+          <div class="form-group">
+            <label for="clExperience">Experience Level</label>
+            <select id="clExperience">
+              <option value="experienced" selected>Experienced Candidate</option>
+              <option value="graduate">Recent Graduate / Entry-Level</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="clSkills">Top 2–3 Key Skills or Strengths</label>
+            <input type="text" id="clSkills" placeholder="e.g. customer service, Excel, and time management" />
+          </div>
+        </div>
+      </div>
+
+      <div id="resignFields" style="display:none;">
+        <div class="letter-grid">
+          <div class="form-group">
+            <label for="rlName">Your Full Name</label>
+            <input type="text" id="rlName" placeholder="e.g. Lerato Khumalo" />
+          </div>
+          <div class="form-group">
+            <label for="rlManager">Manager / HR Name</label>
+            <input type="text" id="rlManager" placeholder="e.g. Mr. D. Ndlovu" />
+          </div>
+          <div class="form-group">
+            <label for="rlCompany">Company Name</label>
+            <input type="text" id="rlCompany" placeholder="e.g. Apex Logistics" />
+          </div>
+        </div>
+        <div class="letter-grid">
+          <div class="form-group">
+            <label for="rlRole">Your Current Job Title</label>
+            <input type="text" id="rlRole" placeholder="e.g. Sales Coordinator" />
+          </div>
+          <div class="form-group">
+            <label for="rlNotice">Notice Period</label>
+            <select id="rlNotice">
+              <option value="2 weeks' notice">2 Weeks' Notice</option>
+              <option value="30 days' (one calendar month) notice" selected>30 Days' / 1 Calendar Month Notice</option>
+              <option value="1 week's notice">1 Week's Notice</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="rlLastDay">Last Working Day</label>
+            <input type="date" id="rlLastDay" />
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn" id="generateLetterBtn">Generate Letter</button>
+
+      <textarea class="output-box" id="letterOutput" aria-label="Generated Letter"></textarea>
+
+      <div class="action-row">
+        <button type="button" class="btn" id="copyLetterBtn">Copy Letter to Clipboard</button>
+        <button type="button" class="mode-btn" id="downloadTxtBtn">Download as .TXT</button>
+      </div>
+      <p id="copyStatus" style="font-size:0.88rem; color:#16a34a; font-weight:600; margin-top:8px;"></p>
+    </div>
+
+    <div class="tool-box faq-section">
+      <h2>Tips for Sending a Winning Cover Letter or Resignation Notice</h2>
+      <p>Keep your cover letter concise—ideally between <strong>200 and 300 words</strong> (three to four short paragraphs)—so hiring managers can scan your key strengths in under 30 seconds. After copying your letter, you can save it as a PDF and combine it with your CV and certificates using our free <a href="pdf-merger.html">PDF Merger</a>.</p>
+
+      <h2>Frequently Asked Questions</h2>
+      <p><strong>How much notice do I need to give when resigning in South Africa?</strong><br />
+      Under South Africa's Basic Conditions of Employment Act (BCEA), minimum statutory notice is <strong>1 week</strong> if employed for 6 months or less, <strong>2 weeks</strong> if employed for more than 6 months up to 1 year, and <strong>4 weeks (or 1 calendar month)</strong> if employed for more than 1 year—unless your employment contract specifies a different notice period.</p>
+
+      <p><strong>Is my personal information stored on your servers?</strong><br />
+      No. Everything you type is processed 100% locally inside your web browser and is never uploaded or saved anywhere.</p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="color:#fff;"><div class="logo-badge">L</div>LOGISOPH <span>Tools</span></div>
+          <p>Free Tools. Simple Solutions.</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="year"></span> LOGISOPH Tools. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    let currentMode = 'cover';
+
+    const btnCover = document.getElementById('btnCoverMode');
+    const btnResign = document.getElementById('btnResignMode');
+    const coverFields = document.getElementById('coverFields');
+    const resignFields = document.getElementById('resignFields');
+    const output = document.getElementById('letterOutput');
+
+    function todayFormatted() {
+      return new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function generateLetter() {
+      if (currentMode === 'cover') {
+        const name = document.getElementById('clName').value.trim() || '[Your Full Name]';
+        const contact = document.getElementById('clEmail').value.trim() || '[Your Email | Phone Number]';
+        const role = document.getElementById('clRole').value.trim() || '[Job Title]';
+        const company = document.getElementById('clCompany').value.trim() || '[Company Name]';
+        const exp = document.getElementById('clExperience').value;
+        const skills = document.getElementById('clSkills').value.trim() || 'strong communication, problem-solving, and reliability';
+
+        const intro = exp === 'graduate'
+          ? `I am writing to express my strong interest in the ${role} position at ${company}. As a motivated and detail-oriented graduate, I am eager to bring my academic foundation, strong work ethic, and enthusiasm to your team.`
