@@ -168,11 +168,10 @@
   </footer>
 
   <script src="main.js"></script>
-  <script>
+   <script>
     function formatZAR(amount) {
       return 'R ' + amount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
-
     function calculateSATax() {
       const rawGross = Math.max(0, parseFloat(document.getElementById('grossSalary').value) || 0);
       const period = document.getElementById('payPeriod').value;
@@ -183,14 +182,43 @@
 
       const annualGross = period === 'monthly' ? rawGross * 12 : rawGross;
       const monthlyGross = annualGross / 12;
-
-      const maxAnnualRA = Math.min(annualGross * 0.275, 430000);
-      const deductibleAnnualRA = Math.min(monthlyRA * 12, maxAnnualRA);
+      const deductibleAnnualRA = Math.min(monthlyRA * 12, Math.min(annualGross * 0.275, 430000));
       const taxableAnnual = Math.max(0, annualGross - deductibleAnnualRA);
 
-      let grossTax = 0;
-      let marginal = 18;
+      let grossTax = 0, marginal = 18;
+      if (taxableAnnual <= 245100) { grossTax = taxableAnnual * 0.18; marginal = 18; }
+      else if (taxableAnnual <= 383100) { grossTax = 44118 + (taxableAnnual - 245100) * 0.26; marginal = 26; }
+      else if (taxableAnnual <= 530200) { grossTax = 79998 + (taxableAnnual - 383100) * 0.31; marginal = 31; }
+      else if (taxableAnnual <= 695800) { grossTax = 125599 + (taxableAnnual - 530200) * 0.36; marginal = 36; }
+      else if (taxableAnnual <= 887000) { grossTax = 185215 + (taxableAnnual - 695800) * 0.39; marginal = 39; }
+      else if (taxableAnnual <= 1878600) { grossTax = 259783 + (taxableAnnual - 887000) * 0.41; marginal = 41; }
+      else { grossTax = 666339 + (taxableAnnual - 1878600) * 0.45; marginal = 45; }
 
-      if (taxableAnnual <= 245100) {
-        grossTax = taxableAnnual * 0.18;
-        marginal = 18;
+      let annualRebate = 17820;
+      if (age === '65to74') annualRebate += 9765;
+      if (age === '75plus') annualRebate += 9765 + 3249;
+
+      const monthlyMedCredit = medMembers === 1 ? 376 : (medMembers >= 2 ? 752 + (medMembers - 2) * 254 : 0);
+      const annualPAYE = Math.max(0, grossTax - annualRebate - monthlyMedCredit * 12);
+      const monthlyPAYE = annualPAYE / 12;
+      const monthlyUIF = includeUif ? Math.min(monthlyGross, 17712) * 0.01 : 0;
+      const monthlyNet = Math.max(0, monthlyGross - monthlyPAYE - monthlyUIF - monthlyRA);
+      const effectivePct = annualGross > 0 ? (annualPAYE / annualGross) * 100 : 0;
+
+      document.getElementById('netMonthly').textContent = formatZAR(monthlyNet);
+      document.getElementById('netAnnual').textContent = 'Annual Net: ' + formatZAR(monthlyNet * 12);
+      document.getElementById('payeMonthly').textContent = formatZAR(monthlyPAYE);
+      document.getElementById('effectiveRate').textContent = 'Effective Tax Rate: ' + effectivePct.toFixed(1) + '%';
+      document.getElementById('uifMonthly').textContent = formatZAR(monthlyUIF);
+      document.getElementById('medCreditMonthly').textContent = formatZAR(monthlyMedCredit);
+      document.getElementById('marginalRate').textContent = 'Marginal Bracket: ' + marginal + '%';
+    }
+    document.getElementById('calcTaxBtn').addEventListener('click', calculateSATax);
+    ['grossSalary', 'payPeriod', 'ageGroup', 'raContribution', 'medicalMembers', 'includeUif'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calculateSATax);
+      document.getElementById(id).addEventListener('change', calculateSATax);
+    });
+    calculateSATax();
+  </script>
+</body>
+</html>
